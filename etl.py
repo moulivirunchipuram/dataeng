@@ -28,18 +28,19 @@ def process_log_file(cur, filepath):
     # convert timestamp column to datetime
     t = pd.to_datetime(df['ts'], unit='ms')
     
-    time_data = [t, t.hour, t.day, t.isocalendar()[1], t.month, t.year, t.weekday()]
+    time_data = [t, t.dt.hour, t.dt.day, t.dt.week, t.dt.month, t.dt.year, t.dt.weekday]
     
-    column_labels = ('ts','hour','day','week','month','year','weekday')
+    column_labels = ('start_time','hour','day','week','month','year','weekday')
     
-    time_df = pd.DataFrame(time_data.values.tolist(), columns=column_labels)
+    time_df = pd.DataFrame(dict(zip(column_labels, time_data)))
     
     # insert time data
-    try:
-        cur.execute(time_table_insert, list(row))
-    except psycopg2.Error as e: 
-        print("Error: Inserting time data")
-        print (e)
+    for i, row in time_df.iterrows():
+        try:
+            cur.execute(time_table_insert, list(row))
+        except psycopg2.Error as e: 
+            print("Error: Inserting time data")
+            print (e)
     
 
     # load user table
