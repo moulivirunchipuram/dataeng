@@ -13,9 +13,11 @@ def process_song_file(cur, filepath):
     song_data = df[['song_id','title','artist_id','year','duration']].values[0].tolist()
     cur.execute(song_table_insert, song_data)
     
+    
     # insert artist record
     artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']].values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
+    
 
 
 def process_log_file(cur, filepath):
@@ -23,7 +25,7 @@ def process_log_file(cur, filepath):
     df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
-    df = df[df['page'] = 'NextSong']
+    df = df[df['page'] == 'NextSong']
 
     # convert timestamp column to datetime
     t = pd.to_datetime(df['ts'], unit='ms')
@@ -37,7 +39,7 @@ def process_log_file(cur, filepath):
     # insert time data
     for i, row in time_df.iterrows():
         try:
-            cur.execute(time_table_insert, list(row))
+            cur.execute(time_table_insert, list(row))         
         except psycopg2.Error as e: 
             print("Error: Inserting time data")
             print (e)
@@ -49,6 +51,7 @@ def process_log_file(cur, filepath):
     # insert user records
     for i, row in user_df.iterrows():
         cur.execute(user_table_insert, row)
+     
 
     # insert songplay records
     for index, row in df.iterrows():
@@ -63,8 +66,9 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = 
+        songplay_data = (pd.to_datetime(row.ts, unit='ms'), row.userId, row.level, songid, artistid,row.sessionId,row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
+        
 
 
 def process_data(cur, conn, filepath, func):
