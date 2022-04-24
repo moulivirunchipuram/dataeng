@@ -5,6 +5,9 @@ import pandas as pd
 from sql_queries import *
 
 
+# This function extracts data from files under data/song_data 
+# folders and inserts into 'songs' and 'artists' tables
+
 def process_song_file(cur, filepath):
     # open song file
     df = pd.read_json(filepath, lines=True)
@@ -19,7 +22,8 @@ def process_song_file(cur, filepath):
     cur.execute(artist_table_insert, artist_data)
     
 
-
+# This function extracts data from data/log_data files and 
+# inserts into 'time', 'users', and 'songplays' tables
 def process_log_file(cur, filepath):
     # open log file
     df = pd.read_json(filepath, lines=True)
