@@ -42,4 +42,7 @@ This application facilitates a music streaming company called "**Sparkify**" to 
 
 As a student of Data Engineering, this project makes you understand the concept of ETL piline using Python and  Postgress and get your feet wet.  You really need to have an intermediate level of python knowledge.  (I struggled a bit, but I went through a crash course of python iin udacity). 
 
+### ER Diagram
+Please take a look at the sparkifydb_erd.png which is geneated using
+sqlalchemy and sqlalchemy_schemadisplay packages
 

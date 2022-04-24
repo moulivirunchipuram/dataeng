@@ -3,13 +3,20 @@ import glob
 import psycopg2
 import pandas as pd
 from sql_queries import *
+from sqlalchemy_schemadisplay import create_schema_graph
+from sqlalchemy import MetaData
 
 
-# This function extracts data from files under data/song_data 
-# folders and inserts into 'songs' and 'artists' tables
 
 def process_song_file(cur, filepath):
-    # open song file
+    """
+    This function extracts song information from json file and stores into songs table.
+    This also extracts artist information and stores into artists table.
+
+    INPUT PARAMETERS:
+    * cur - the cursor varibale
+    * filepath - the file path to the song file
+    """
     df = pd.read_json(filepath, lines=True)
 
     # insert song record
@@ -22,9 +29,18 @@ def process_song_file(cur, filepath):
     cur.execute(artist_table_insert, artist_data)
     
 
-# This function extracts data from data/log_data files and 
-# inserts into 'time', 'users', and 'songplays' tables
 def process_log_file(cur, filepath):
+    """
+    This function extracts various information from the input file.
+    The extracted data is processed and stores in the following tables.
+    * time
+    * users
+    * songplays
+
+    INPUT PARAMETERS:
+    * cur - the cursor varibale
+    * filepath - the file path to the song file
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -36,6 +52,7 @@ def process_log_file(cur, filepath):
     
     time_data = [t, t.dt.hour, t.dt.day, t.dt.week, t.dt.month, t.dt.year, t.dt.weekday]
     
+    # map the column labels matching the columns in the table
     column_labels = ('start_time','hour','day','week','month','year','weekday')
     
     time_df = pd.DataFrame(dict(zip(column_labels, time_data)))
@@ -76,6 +93,19 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    This function is invoked from the main method.
+    It goes through all the files in the given file path.
+    And invokes the appropriate functions. 
+    This function only processes json files.
+    
+    INPUTS:
+    * cur - the cursor varibale
+    * conn - the database connection variable
+    * filepath - relative path to the files that are being processed
+    * func - function that will be applied on the files
+    
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -95,11 +125,24 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    This is the driver method that establishes database connection
+    The db is hosted in localhost and db name is sparkifydb
+    This invokes process_data method for the following filepaths
+    
+    * data/song_data
+    * data/log_data
+    
+    """
+    
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
     process_data(cur, conn, filepath='data/log_data', func=process_log_file)
+    
+    graph = create_schema_graph(metadata=MetaData('postgresql://student:student@127.0.0.1/sparkifydb'))
+    graph.write_png('sparkifydb_erd.png')
 
     conn.close()
 
