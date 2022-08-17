@@ -1,0 +1,6 @@
+songplay_id,start_time,user_id,level,song_id,artist_id,session_id,location,user_agent
+5917,1541126568796,66,free,SOYFMVU12A67020126,ARC4W081187B9ACDBD,153,"Harrisburg-Carlisle, PA","""Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"""
+5944,1541126568796,66,free,SOEEKWT12AB01849DE,ARC4W081187B9ACDBD,153,"Harrisburg-Carlisle, PA","""Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"""
+5952,1541126568796,66,free,SOVTDCU12A6D4F9275,ARC4W081187B9ACDBD,153,"Harrisburg-Carlisle, PA","""Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"""
+5960,1541126568796,66,free,SOYOXUC12A58A782DA,ARC4W081187B9ACDBD,153,"Harrisburg-Carlisle, PA","""Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"""
+6322,1541126568796,66,free,SOKSREW12A6D4F926D,ARC4W081187B9ACDBD,153,"Harrisburg-Carlisle, PA","""Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36"""
