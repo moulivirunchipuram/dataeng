@@ -81,7 +81,7 @@ def process_song_data(spark, song_input_data, output_data):
 
 
 '''Return none
-Input Parameters: spark session, log_input_data json, song_input_data json, and output_data S3 path
+Input Parameters: spark session, log_input_data json, song_input_data json, and output_data S3/local path
 What does it do: Processes log_input_data data using spark and output as parquet to S3/local directory structure
 '''
 
