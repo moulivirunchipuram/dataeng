@@ -173,7 +173,7 @@ def main():
     spark = create_spark_session()
 
     # Specify data
-    input_data = "s3a://udacity-dend/"
+    #input_data = "s3a://udacity-dend/" 
     song_input_data = "data/songdata/song_data/A/A/A/*.json"
     log_input_data = "data/log-data/*.json"
     output_data = "data/outputdata/"
