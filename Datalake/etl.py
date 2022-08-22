@@ -34,7 +34,6 @@ Input Parameters: spark session, song_input_data json, and output_data S3/local 
 What does it do: Process song_input data using spark and output as parquet to S3/local directory structure
 '''
 
-
 def process_song_data(spark, song_input_data, output_data):
     # get filepath to song data file
     print('Read song data from json file')
@@ -89,7 +88,6 @@ def process_log_data(spark, log_input_data, song_input_data, output_data):
     # get filepath to log data file
     log_data = spark.read.json(log_input_data)
 
-
     # read log data file
     print('Print LOG data schema')
     log_df = log_data
@@ -140,6 +138,7 @@ def process_log_data(spark, log_input_data, song_input_data, output_data):
     # write time table to parquet files partitioned by year and month
     print('Writing time_table to parquet')
     df_time_table = time_table.toPandas()
+    print("Done writing time_table to parquet")
 
     time_table.write.partitionBy('year', 'month').parquet(os.path.join(output_data, 'timetable/time_table.parquet'),
                                                           'overwrite')
@@ -150,6 +149,10 @@ def process_log_data(spark, log_input_data, song_input_data, output_data):
     log_df.createOrReplaceTempView("log_df_table")
     song_df.createOrReplaceTempView("song_df_table")
 
+    '''create songplays table by joining
+    1. song_df_table on artist_name
+    2. time_table on start_time
+    '''
     songplays_table = spark.sql(
         """SELECT DISTINCT log_df_table.start_time, log_df_table.userId, log_df_table.level, log_df_table.sessionId, log_df_table.location,log_df_table.userAgent, song_df_table.song_id, song_df_table.artist_id
         FROM log_df_table 
@@ -157,11 +160,10 @@ def process_log_data(spark, log_input_data, song_input_data, output_data):
         ON song_df_table.artist_name = log_df_table.artist 
         INNER JOIN time_table
         ON time_table.start_time = log_df_table.start_time
-        GROUP BY time_table.year, time_table.month
         """)
     songplays_table = songplays_table.withColumn("songplay_id", monotonically_increasing_id())
 
-    print('Writing songplays to parquet')
+
     df_songplays_table = songplays_table.toPandas()
 
     # write songplays table to parquet files partitioned by year and month
@@ -172,10 +174,10 @@ def main():
     # Create spark session
     spark = create_spark_session()
 
-    # Specify data
-    #input_data = "s3a://udacity-dend/" 
-    song_input_data = "data/songdata/song_data/A/A/A/*.json"
-    log_input_data = "data/log-data/*.json"
+    # Specify data input and output path
+    #input_data = "s3a://udacity-dend/"
+    song_input_data = "s3a://udacity-dend/song_data/A/A/A/*.json"
+    log_input_data = "s3a://udacity-dend/log-data/*.json"
     output_data = "data/outputdata/"
 
     # Call process functions
