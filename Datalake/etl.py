@@ -167,8 +167,7 @@ def process_log_data(spark, log_input_data, song_input_data, output_data):
     df_songplays_table = songplays_table.toPandas()
 
     # write songplays table to parquet files partitioned by year and month
-    songplays_table.write.partitionBy('year','month').parquet(os.path.join(output_data, 'songplays/songplays_table.parquet'),
-                                                               'overwrite')
+    songplays_table.write.partitionBy('year','month').parquet(os.path.join(output_data, 'songplays/songplays_table.parquet'),'overwrite')
 
 def main():
     # Create spark session
@@ -176,8 +175,10 @@ def main():
 
     # Specify data input and output path
     #input_data = "s3a://udacity-dend/"
-    song_input_data = "s3a://udacity-dend/song_data/A/A/A/*.json"
-    log_input_data = "s3a://udacity-dend/log-data/*.json"
+    #song_input_data = "s3a://udacity-dend/song_data/A/A/A/*.json"
+    song_input_data = "data/songdata/song_data/A/A/A/*.json"
+    #log_input_data = "s3a://udacity-dend/log-data/*.json"
+    log_input_data = "data/logdata/*.json"
     output_data = "data/outputdata/"
 
     # Call process functions
